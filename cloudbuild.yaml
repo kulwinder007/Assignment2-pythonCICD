@@ -7,6 +7,10 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'us-central1-docker.pkg.dev/assignment2-454615/flask-app-repo/flask-app:$COMMIT_SHA']
 
+  # SSH into the Compute Engine instance to deploy the updated image
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: ['compute', 'ssh', 'flask-instance', '--zone=us-central1-a', '--command', 'sudo docker pull us-central1-docker.pkg.dev/assignment2-454615/flask-app-repo/flask-app:$COMMIT_SHA && sudo docker stop flask-app-container && sudo docker rm flask-app-container && sudo docker run -d --name flask-app-container -p 5000:5000 us-central1-docker.pkg.dev/assignment2-454615/flask-app-repo/flask-app:$COMMIT_SHA']
+
 images:
   - 'us-central1-docker.pkg.dev/assignment2-454615/flask-app-repo/flask-app:$COMMIT_SHA'
 
